@@ -1,7 +1,17 @@
-const PremiumPage = () => {
+import { redirect } from "next/navigation";
+
+import { getSession } from "@/actions";
+
+const PremiumPage = async () => {
+  const session = await getSession();
+
+  if (!session.isLoggedIn) {
+    redirect("/");
+  }
+
   return (
-    <div>
-      <h1>Premium</h1>
+    <div className="premium">
+      <h1>Welcome to Premium Page</h1>
     </div>
   );
 };
