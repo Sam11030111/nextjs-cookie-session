@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { getSession } from "@/actions";
+import { changePremium, getSession, changeUsername } from "@/actions";
 
 const ProfilePage = async () => {
   const session = await getSession();
@@ -18,8 +18,17 @@ const ProfilePage = async () => {
       <span>
         You are a <b>{session.isPro ? "Premium" : "Free"}</b> user
       </span>
-      <form action="">
+      <form action={changePremium}>
         <button>{session.isPro ? "Cancel" : "Buy"} Premium</button>
+      </form>
+      <form action={changeUsername}>
+        <input
+          type="text"
+          name="username"
+          required
+          placeholder={session.username}
+        />
+        <button>Update</button>
       </form>
     </div>
   );

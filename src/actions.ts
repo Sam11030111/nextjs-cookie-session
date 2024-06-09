@@ -2,8 +2,10 @@
 
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
-import { SessionData, defaultSession, sessionOptions } from "./lib";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+
+import { SessionData, defaultSession, sessionOptions } from "./lib";
 
 let username = "Sam";
 let isPro = true;
@@ -42,8 +44,30 @@ export const login = async (
   await session.save();
   redirect("/");
 };
+
 export const logout = async () => {
   const session = await getSession();
   session.destroy();
   redirect("/");
+};
+
+export const changePremium = async () => {
+  const session = await getSession();
+
+  isPro = !session.isPro;
+  session.isPro = isPro;
+  await session.save();
+  revalidatePath("/profile");
+};
+
+export const changeUsername = async (formData: FormData) => {
+  const session = await getSession();
+
+  const newUsername = formData.get("username") as string;
+
+  username = newUsername;
+
+  session.username = username;
+  await session.save();
+  revalidatePath("/profile");
 };
